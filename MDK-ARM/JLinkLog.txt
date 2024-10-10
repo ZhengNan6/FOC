@@ -1,0 +1,87 @@
+T6260 000:012.946   SEGGER J-Link V7.94c Log File
+T6260 000:013.408   DLL Compiled: Jan  3 2024 15:15:42
+T6260 000:013.418   Logging started @ 2024-10-10 13:08
+T6260 000:013.426   Process: C:\Keil_v5\UV4\UV4.exe
+T6260 000:013.443 - 13.434ms
+T6260 000:013.461 JLINK_SetWarnOutHandler(...)
+T6260 000:013.469 - 0.012ms
+T6260 000:013.480 JLINK_OpenEx(...)
+T6260 000:021.688   Firmware: J-Link V9 compiled May  7 2021 16:26:12
+T6260 000:022.429   Firmware: J-Link V9 compiled May  7 2021 16:26:12
+T6260 000:022.955   Decompressing FW timestamp took 305 us
+T6260 000:029.777   Hardware: V9.40
+T6260 000:029.795   S/N: 69409554
+T6260 000:029.807   OEM: SEGGER
+T6260 000:029.819   Feature(s): RDI, GDB, FlashDL, FlashBP, JFlash
+T6260 000:030.504   Bootloader: (Could not read)
+T6260 000:031.633   TELNET listener socket opened on port 19021
+T6260 000:031.863   WEBSRV WEBSRV_Init(): Starting webserver thread(s)
+T6260 000:033.378   WEBSRV Webserver running on local port 19080
+T6260 000:033.629   Looking for J-Link GUI Server exe at: C:\Keil_v5\ARM\Segger\JLinkGUIServer.exe
+T6260 000:033.818   Looking for J-Link GUI Server exe at: C:\Program Files\SEGGER\JLink_V810a\JLinkGUIServer.exe
+T6260 000:033.920   Forking J-Link GUI Server: C:\Program Files\SEGGER\JLink_V810a\JLinkGUIServer.exe
+T6260 000:392.621   J-Link GUI Server info: "J-Link GUI server V8.10a "
+T6260 000:397.634 - 384.127ms returns "O.K."
+T6260 000:397.671 JLINK_GetEmuCaps()
+T6260 000:397.685 - 0.010ms returns 0xB9FF7BBF
+T6260 000:397.703 JLINK_TIF_GetAvailable(...)
+T6260 000:397.894 - 0.194ms
+T6260 000:397.918 JLINK_SetErrorOutHandler(...)
+T6260 000:397.926 - 0.009ms
+T6260 000:404.211 JLINK_ExecCommand("ProjectFile = "C:\Users\Z\Desktop\FOC\MDK-ARM\JLinkSettings.ini"", ...). 
+T6260 000:439.111   Ref file found at: C:\Keil_v5\ARM\Segger\JLinkDevices.ref
+T6260 000:439.332   REF file references invalid XML file: C:\Program Files\SEGGER\JLink_V810a\JLinkDevices.xml
+T6260 000:440.401 - 36.196ms returns 0x00
+T6260 000:446.421 JLINK_ExecCommand("Device = STM32F103C8", ...). 
+T6260 000:453.120   Device "STM32F103C8" selected.
+T6260 000:453.721 - 7.271ms returns 0x00
+T6260 000:453.742 JLINK_ExecCommand("DisableConnectionTimeout", ...). 
+T6260 000:453.756 - 0.002ms returns 0x01
+T6260 000:453.767 JLINK_GetHardwareVersion()
+T6260 000:453.780 - 0.008ms returns 94000
+T6260 000:453.800 JLINK_GetDLLVersion()
+T6260 000:453.809 - 0.008ms returns 79403
+T6260 000:453.819 JLINK_GetOEMString(...)
+T6260 000:453.829 JLINK_GetFirmwareString(...)
+T6260 000:453.838 - 0.008ms
+T6260 000:468.539 JLINK_GetDLLVersion()
+T6260 000:468.569 - 0.029ms returns 79403
+T6260 000:468.580 JLINK_GetCompileDateTime()
+T6260 000:468.588 - 0.008ms
+T6260 000:473.458 JLINK_GetFirmwareString(...)
+T6260 000:473.493 - 0.036ms
+T6260 000:479.927 JLINK_GetHardwareVersion()
+T6260 000:479.952 - 0.024ms returns 94000
+T6260 000:484.618 JLINK_GetSN()
+T6260 000:484.642 - 0.024ms returns 69409554
+T6260 000:489.400 JLINK_GetOEMString(...)
+T6260 000:503.322 JLINK_TIF_Select(JLINKARM_TIF_SWD)
+T6260 000:503.951 - 0.628ms returns 0x00
+T6260 000:503.970 JLINK_HasError()
+T6260 000:504.010 JLINK_SetSpeed(5000)
+T6260 000:504.100 - 0.091ms
+T6260 000:504.126 JLINK_GetId()
+T6260 000:509.294   InitTarget() start
+T6260 000:509.316    J-Link Script File: Executing InitTarget()
+T6260 000:514.075   SWD selected. Executing JTAG -> SWD switching sequence.
+T6260 000:603.962   Error: Failed to initialized DAP.
+T6260 000:608.433   Can not attach to CPU. Trying connect under reset.
+T6260 000:663.537   SWD selected. Executing JTAG -> SWD switching sequence.
+T6260 000:753.467   Error: Failed to initialized DAP.
+T6260 000:759.191   Connecting to CPU via connect under reset failed.
+T6260 000:814.080   InitTarget() end - Took 300ms
+T6260 000:819.038   Connect failed. Resetting via Reset pin and trying again.
+T6260 000:884.790   InitTarget() start
+T6260 000:884.819    J-Link Script File: Executing InitTarget()
+T6260 000:889.309   SWD selected. Executing JTAG -> SWD switching sequence.
+T6260 000:980.544   Error: Failed to initialized DAP.
+T6260 000:986.558   Can not attach to CPU. Trying connect under reset.
+T6260 001:042.038   SWD selected. Executing JTAG -> SWD switching sequence.
+T6260 001:132.619   Error: Failed to initialized DAP.
+T6260 001:137.204   Connecting to CPU via connect under reset failed.
+T6260 001:193.009   InitTarget() end - Took 303ms
+T6260 001:193.038 - 688.911ms returns 0x00000000
+T6260 013:626.253 JLINK_Close()
+T6260 013:637.648 - 11.394ms
+T6260 013:637.683   
+T6260 013:637.697   Closed
