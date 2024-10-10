@@ -67,7 +67,8 @@ typedef struct
     float Beta;
     float q;
     float d;
-    uint8_t SimplingPhash;//目前正在电流采样的相
+    uint8_t SetSimplingPhash; //目前正在电流采样的相
+    uint8_t NowSimplingPhash;//目前已完成电流采样的相
 }FOC_I_t;//FOC控制中各个坐标系的电流
 
 typedef struct

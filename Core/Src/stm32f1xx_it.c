@@ -60,6 +60,7 @@ extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 extern TIM_HandleTypeDef htim1;
 /* USER CODE BEGIN EV */
+extern FOC_t FOC;
 int debug_adc1 = 1;
 int debug_adc2 = 1;
 uint64_t CNT[100];
@@ -210,6 +211,7 @@ void SysTick_Handler(void)
 void ADC1_2_IRQHandler(void)
 {
   /* USER CODE BEGIN ADC1_2_IRQn 0 */
+    FOC.I.NowSimplingPhash = FOC.I.SetSimplingPhash;
     if (++CNT_index > 99)
         CNT_index = 0;
     

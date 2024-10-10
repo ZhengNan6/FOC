@@ -74,7 +74,7 @@ void SetPhashPwm(uint16_t A, uint16_t B, uint16_t C)
 void SetSamplingPhash(void)
 {
     static ADC_ChannelConfTypeDef sConfig = {0};
-    switch (FOC.I.SimplingPhash)
+    switch (FOC.I.SetSimplingPhash)
     {
     case BC://0b 011 BC相
         sConfig.Channel = ADC_CHANNEL_1;     // B相
@@ -119,18 +119,18 @@ void GetSamplingCurrent(void)
     switch (FOC.I.SimplingPhash)
     {
     case 3://0b 011 BC相
-        FOC.I.B = HAL_ADC_GetValue(&hadc1);
-        FOC.I.C = HAL_ADC_GetValue(&hadc2);
+        FOC.I.B = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
+        FOC.I.C = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
         FOC.I.A = -FOC.I.B - FOC.I.C;
         break;
     case 6://0b 110 AB相
-        FOC.I.A = HAL_ADC_GetValue(&hadc1);
-        FOC.I.B = HAL_ADC_GetValue(&hadc2);
+        FOC.I.A = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
+        FOC.I.B = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
         FOC.I.C = -FOC.I.A - FOC.I.B;
         break;
     case 5://0b 101 AC相
-        FOC.I.A = HAL_ADC_GetValue(&hadc1);
-        FOC.I.C = HAL_ADC_GetValue(&hadc2);
+        FOC.I.A = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
+        FOC.I.C = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
         FOC.I.B = -FOC.I.A - FOC.I.C;
         break;
     default:

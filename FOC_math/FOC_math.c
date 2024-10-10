@@ -248,7 +248,7 @@ void FOCSetCurrent(float SetCurrent)
 	SetPhashPwm(FOC.PWM.A, FOC.PWM.B, FOC.PWM.C);
     
     //采样电流选择
-    FOC.I.SimplingPhash = SamplingPhashChoice();
+    FOC.I.SetSimplingPhash = SamplingPhashChoice();
     SetSamplingPhash();
 }
 
