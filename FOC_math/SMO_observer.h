@@ -16,6 +16,8 @@ typedef struct
     float alphaZ;//观测反电动势
     float betaZ;//观测反电动势
     float H;//滑膜增益 
+    float lpfK;//低通滤波系数
+    float Etheta;//电角度
 }Observer_t;
 void SMO_observer(void);
 #endif
