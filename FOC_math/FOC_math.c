@@ -98,12 +98,11 @@ void FOC_Init(void)
  * @param SetCurrent 设定力矩电流
  * @note  最大输出电压限制为1/sqrt(3)Udc
  */
-
 void FOCSetCurrent(float SetCurrent)
 {
     //PI调节器，输出转子电压量
-    FOC.U.d = PidCalc(&FOC.Ud_PI, SetCurrent, FOC.I.d);
-    FOC.U.q = PidCalc(&FOC.Uq_PI, 0, 		  FOC.I.q);
+    FOC.U.d = PidCalc(&FOC.Ud_PI, 0,            FOC.I.d);
+    FOC.U.q = PidCalc(&FOC.Uq_PI, SetCurrent,   FOC.I.q);
     //电压限幅，最大等幅圆为 1/sqrt(3)Udc
     /*
     svpwm的调制已经针对过调制的情况进行限幅，可以视为此处限幅的超集

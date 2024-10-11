@@ -59,6 +59,7 @@
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim2;
 /* USER CODE BEGIN EV */
 extern FOC_t FOC;
 int debug_adc1 = 1;
@@ -217,13 +218,13 @@ void ADC1_2_IRQHandler(void)
     
     CNT[CNT_index] = htim1.Instance->CNT;
 
-  if (__HAL_ADC_GET_FLAG(&hadc1, ADC_FLAG_EOC)) // æ£?æŸ? ADC1 çš? End of Conversion æ ‡å¿—
+  if (__HAL_ADC_GET_FLAG(&hadc1, ADC_FLAG_EOC))
   {
      __HAL_ADC_CLEAR_FLAG(&hadc1, ADC_FLAG_JEOC);
     if (debug_adc1) debug_adc1 = 0;
     else            debug_adc1 = 1;
   }
-  else if (__HAL_ADC_GET_FLAG(&hadc2, ADC_FLAG_EOC)) // æ£?æŸ? ADC1 çš? End of Conversion æ ‡å¿—
+  else if (__HAL_ADC_GET_FLAG(&hadc2, ADC_FLAG_EOC))
   {
      __HAL_ADC_CLEAR_FLAG(&hadc2, ADC_FLAG_JEOC);
     if (debug_adc2) debug_adc2 = 0;
@@ -237,7 +238,7 @@ void ADC1_2_IRQHandler(void)
   /* USER CODE END ADC1_2_IRQn 1 */
 }
 
-/**
+/** cxr
   * @brief This function handles TIM1 update interrupt.
   */
 void TIM1_UP_IRQHandler(void)
@@ -249,6 +250,22 @@ void TIM1_UP_IRQHandler(void)
   /* USER CODE BEGIN TIM1_UP_IRQn 1 */
 
   /* USER CODE END TIM1_UP_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM2 global interrupt.
+  */
+float step = 2;
+void TIM2_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM2_IRQn 0 */
+    FOC.angle+=step;
+    if (FOC.angle > 180)     FOC.angle = -180;
+  /* USER CODE END TIM2_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim2);
+  /* USER CODE BEGIN TIM2_IRQn 1 */
+
+  /* USER CODE END TIM2_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

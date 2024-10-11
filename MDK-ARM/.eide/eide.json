@@ -129,6 +129,9 @@
           },
           {
             "path": "../PID/pid.c"
+          },
+          {
+            "path": "../FOC_math/SMO_observer.c"
           }
         ],
         "folders": []
