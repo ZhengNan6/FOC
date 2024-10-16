@@ -66,6 +66,8 @@ int debug_adc1 = 1;
 int debug_adc2 = 1;
 uint64_t CNT[100];
 uint64_t CNT_index = 0;
+float step = 2;
+uint64_t time2_ms = 0;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -238,7 +240,7 @@ void ADC1_2_IRQHandler(void)
   /* USER CODE END ADC1_2_IRQn 1 */
 }
 
-/** cxr
+/**
   * @brief This function handles TIM1 update interrupt.
   */
 void TIM1_UP_IRQHandler(void)
@@ -255,12 +257,12 @@ void TIM1_UP_IRQHandler(void)
 /**
   * @brief This function handles TIM2 global interrupt.
   */
-float step = 2;
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
     FOC.angle+=step;
     if (FOC.angle > 180)     FOC.angle = -180;
+    time2_ms++;
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */

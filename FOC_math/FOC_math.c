@@ -1165,7 +1165,7 @@ const float Trigonometric_Functions[901] = {
     99.9998476913288,
 	100
 };
-#define user_abs(x) ((x) > (0) ? (x) : (-(x)))
+
 // sin函数查表法
 float sin_calculate(float angle)
 {

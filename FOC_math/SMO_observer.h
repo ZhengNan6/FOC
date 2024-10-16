@@ -1,6 +1,8 @@
 #ifndef __SMO_H__
 #define __SMO_H__
 #include "stdint.h"
+
+#
 typedef struct
 {
     float A;//离散化关系下 I(k) = A*I(k-1)+B*(Z) 
@@ -18,6 +20,9 @@ typedef struct
     float H;//滑膜增益 
     float lpfK;//低通滤波系数
     float Etheta;//电角度
+    float Eoemga;//电角速度
 }Observer_t;
+
+void SMO_Init(void);
 void SMO_observer(void);
 #endif
