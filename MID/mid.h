@@ -1,7 +1,7 @@
 #ifndef __MID_H__
 #define __MID_H__
 #include "stdint.h"
-
+#define ADC_VALUE_OF_CURRENT 0.00146484375f //¡À3A 12bit 6/4096
 typedef enum{
     A = 4, //0b 100
     B = 2, //0b 010
@@ -12,6 +12,7 @@ typedef enum{
 }SamplingPhash_e;
 
 void StartPhashPwm(void);
+void GetSamplingCurrent(void);
 void SetPhashPwm(uint16_t A, uint16_t B, uint16_t C);
 void SetSamplingPhash();
 

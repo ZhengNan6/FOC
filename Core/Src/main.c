@@ -56,7 +56,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-float current = 5;
+float current = 5.0f;
 uint64_t ccr;
 /* USER CODE END 0 */
 

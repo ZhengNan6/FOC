@@ -1,4 +1,7 @@
-foc/foc_math.o: ..\FOC_math\FOC_math.c ..\FOC_math\FOC_math.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h ..\PID\pid.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h ..\MID\mid.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\math.h
+foc\foc_math.o: ..\FOC_math\FOC_math.c
+foc\foc_math.o: ..\FOC_math\FOC_math.h
+foc\foc_math.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+foc\foc_math.o: ../PID/pid.h
+foc\foc_math.o: ../MID/mid.h
+foc\foc_math.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+foc\foc_math.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
