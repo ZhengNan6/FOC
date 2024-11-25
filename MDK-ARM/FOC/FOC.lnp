@@ -3,6 +3,8 @@
 "foc\main.o"
 "foc\gpio.o"
 "foc\adc.o"
+"foc\dma.o"
+"foc\i2c.o"
 "foc\tim.o"
 "foc\stm32f1xx_it.o"
 "foc\stm32f1xx_hal_msp.o"
@@ -19,6 +21,7 @@
 "foc\stm32f1xx_hal_flash.o"
 "foc\stm32f1xx_hal_flash_ex.o"
 "foc\stm32f1xx_hal_exti.o"
+"foc\stm32f1xx_hal_i2c.o"
 "foc\stm32f1xx_hal_tim.o"
 "foc\stm32f1xx_hal_tim_ex.o"
 "foc\system_stm32f1xx.o"
@@ -26,6 +29,7 @@
 "foc\mid.o"
 "foc\pid.o"
 "foc\smo_observer.o"
+"foc\as5600.o"
 --strict --scatter "FOC\FOC.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

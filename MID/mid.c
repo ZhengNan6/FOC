@@ -33,6 +33,7 @@ ADC_InjectionConfTypeDef sConfigInjected = {
 /**
  * @brief 打开PWM输出和ADC触发采集
  */
+uint16_t init_time = 200;
 void StartPhashPwm(void)
 {
    HAL_TIM_Base_Start_IT(&htim2);
@@ -57,14 +58,14 @@ void StartPhashPwm(void)
     sConfigInjected.InjectedChannel = ADC_CHANNEL_6;     //ADC2_IN6
     HAL_ADCEx_InjectedConfigChannel(&hadc2, &sConfigInjected);
     /*校准1k次*/
-    for(int16_t i = 0; i < 1000; i++)
+    for(int16_t i = 0; i < init_time; i++)
     {
         HAL_Delay(1);
         ADC1_value_sum += HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
         ADC2_value_sum += HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
     }
-    bias_current.ADC1_IN5 = ADC1_value_sum/1000.0f;
-    bias_current.ADC2_IN6 = ADC2_value_sum/1000.0f;
+    bias_current.ADC1_IN5 = ADC1_value_sum/init_time;
+    bias_current.ADC2_IN6 = ADC2_value_sum/init_time;
     
     /*校准ADC1_IN6 ADC2_IN7*/
     sConfigInjected.InjectedChannel = ADC_CHANNEL_6;     //ADC1_IN6
@@ -75,14 +76,14 @@ void StartPhashPwm(void)
     
     ADC1_value_sum = 0;
     ADC2_value_sum = 0;
-    for(int16_t i = 0; i < 1000; i++)
+    for(int16_t i = 0; i < init_time; i++)
     {
         HAL_Delay(1);
         ADC1_value_sum += HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
         ADC2_value_sum += HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
     }
-    bias_current.ADC1_IN6 = ADC1_value_sum/1000.0f;
-    bias_current.ADC2_IN7 = ADC2_value_sum/1000.0f;
+    bias_current.ADC1_IN6 = ADC1_value_sum/init_time;
+    bias_current.ADC2_IN7 = ADC2_value_sum/init_time;
     
     /*ADC采集校准后再打开三相pwm输出 防止下管干扰*/
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
@@ -150,10 +151,10 @@ void SetSamplingPhash(void)
     }
 }
 
-uint32_t adc1_value;
-uint32_t adc2_value;
-int32_t adc1_close;
-int32_t adc2_close;
+
+/**
+ *@brief 获取三相电流
+ */
 void GetSamplingCurrent(void)
 {
     switch (FOC.I.NowSimplingPhash)
@@ -161,12 +162,12 @@ void GetSamplingCurrent(void)
     case 3://0b 011 BC相
         FOC.I.B = (int16_t)(HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1) - bias_current.ADC2_IN6) * ADC_VALUE_OF_CURRENT;
         FOC.I.C = (int16_t)(HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1) - bias_current.ADC1_IN5) * ADC_VALUE_OF_CURRENT;
-        FOC.I.A = 0;//-FOC.I.B - FOC.I.C;
+        FOC.I.A = -FOC.I.B - FOC.I.C;
         break;
     case 6://0b 110 AB相
         FOC.I.A = (int16_t)(HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1) - bias_current.ADC2_IN7) * ADC_VALUE_OF_CURRENT;
         FOC.I.B = (int16_t)(HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1) - bias_current.ADC1_IN6) * ADC_VALUE_OF_CURRENT;
-        FOC.I.C =  0;//-FOC.I.A - FOC.I.B;
+        FOC.I.C = -FOC.I.A - FOC.I.B;
         break;
     case 5://0b 101 AC相
         
@@ -187,7 +188,7 @@ void GetSamplingCurrent(void)
 //            stop = 1;
 //        }
         
-        FOC.I.B = 0;//-FOC.I.A - FOC.I.C;
+        FOC.I.B = -FOC.I.A - FOC.I.C;
         break;
     default:
         break;

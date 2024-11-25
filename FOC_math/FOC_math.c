@@ -100,13 +100,17 @@ void FOC_Init(void)
  */
 void FOCSetCurrent(float SetCurrent)
 {
+    //qd轴电流计算
     GetSamplingCurrent();
+    Phase_to_AlphaBeta();
+    AlphaBeta_to_qd();
+    
     //PI调节器，输出转子电压量
     FOC.U.d = PidCalc(&FOC.Ud_PI, 0,            FOC.I.d);
     FOC.U.q = PidCalc(&FOC.Uq_PI, SetCurrent,   FOC.I.q);
     //电压限幅，最大等幅圆为 1/sqrt(3)Udc
     /*
-    svpwm的调制已经针对过调制的情况进行限幅，可以视为此处限幅的超集
+    svpwm的调制已经针对过调制的情况进行限幅，视为此处限幅的超集
     */
     //逆帕克变换，转子VqVd转VαVβ
     qd_to_AlphaBeta();
@@ -123,133 +127,133 @@ void FOCSetCurrent(float SetCurrent)
 	//2.获取扇区号
 	uint8_t sector = (u3 >0 ) + ((u2 > 0) << 1) + ((u1 > 0) << 2);
 
-//	//3.总结矢量作用时间表
-//	if(sector == 5)    //扇区1
-//	{
-//		float T4 = u3 * k;
-//		float T6 = u1 * k;
-//		
-//		float sum = T4+T6;
-//		if(sum > Ts)
-//		{
-//           //缩放系数
-//			float small_k = Ts/sum;
-//			
-//			T4 = small_k*T4;
-//			T6 = small_k*T6;
-//		}
-//		
-//		float T0 = (Ts - T4 - T6)/2;
-//		
-//		FOC.PWM.A = T4+T6+T0;
-//		FOC.PWM.B = T6+T0;
-//		FOC.PWM.C = T0;
-//	}
-//	else if(sector == 4)    //扇区2
-//	{
-//		float T2 = -u3 * k;
-//		float T6 = -u2 * k;
-//		
-//		float sum = T2+T6;
-//		if(sum > Ts)
-//		{
-//			float small_k = Ts/sum;
-//			
-//			T2 = small_k*T2;
-//			T6 = small_k*T6;
-//		}
-//		
-//		float T0 = (Ts - T2 - T6)/2;
-//		
-//		FOC.PWM.A = T6+T0;
-//		FOC.PWM.B = T2+T6+T0;
-//		FOC.PWM.C = T0;
-//	}
-//	else if(sector == 6)    //扇区3
-//	{
-//		float T2 = u1 * k;
-//		float T3 = u2 * k;
-//		
-//		float sum = T2+T3;
-//		if(sum > Ts)
-//		{
-//			float small_k = Ts/sum;
-//			
-//			T2 = small_k*T2;
-//			T3 = small_k*T3;
-//		}
-//		
-//		float T0 = (Ts - T2 - T3)/2;
-//		
-//		FOC.PWM.A = T0;
-//		FOC.PWM.B = T2+T3+T0;
-//		FOC.PWM.C = T3+T0;
-//	}
-//	else if(sector == 2)    //扇区4
-//	{
-//		float T1 = -u1 * k;
-//		float T3 = -u3 * k;
-//		
-//		float sum = T1+T3;
-//		if(sum > Ts)
-//		{
-//			float small_k = Ts/sum;
-//			
-//			T1 = small_k*T1;
-//			T3 = small_k*T3;
-//		}
-//		
-//		float T0 = (Ts - T1 - T3)/2;
-//		
-//		FOC.PWM.A = T0;
-//		FOC.PWM.B = T3+T0;
-//		FOC.PWM.C = T1+T3+T0;
-//	}
-//	else if(sector == 3)    //扇区5
-//	{
-//		float T1 = u2 * k;
-//		float T5 = u3 * k;
-//		
-//		float sum = T1+T5;
-//		if(sum > Ts)
-//		{
-//			float small_k = Ts/sum;
-//			
-//			T1 = small_k*T1;
-//			T5 = small_k*T5;
-//		}
-//		
-//		float T0 = (Ts - T1 - T5)/2;
-//		
-//		FOC.PWM.A = T5+T0;
-//		FOC.PWM.B = T0;
-//		FOC.PWM.C = T1+T5+T0;
-//	}
-//	else if(sector == 1)    //扇区6
-//	{
-//		float T4 = -u2 * k;
-//		float T5 = -u1 * k;
-//		
-//		float sum = T4+T5;
-//		if(sum > Ts)
-//		{
-//			float small_k = Ts/sum;
-//			
-//			T4 = small_k*T4;
-//			T5 = small_k*T5;
-//		}
-//		
-//		float T0 = (Ts - T4 - T5)/2;
-//		
-//		FOC.PWM.A = T4+T5+T0;
-//		FOC.PWM.B = T0;
-//		FOC.PWM.C = T5+T0;
-//	}
+	//3.总结矢量作用时间表
+	if(sector == 5)    //扇区1
+	{
+		float T4 = u3 * k;
+		float T6 = u1 * k;
+		
+		float sum = T4+T6;
+		if(sum > Ts)
+		{
+           //缩放系数
+			float small_k = Ts/sum;
+			
+			T4 = small_k*T4;
+			T6 = small_k*T6;
+		}
+		
+		float T0 = (Ts - T4 - T6)/2;
+		
+		FOC.PWM.A = T4+T6+T0;
+		FOC.PWM.B = T6+T0;
+		FOC.PWM.C = T0;
+	}
+	else if(sector == 4)    //扇区2
+	{
+		float T2 = -u3 * k;
+		float T6 = -u2 * k;
+		
+		float sum = T2+T6;
+		if(sum > Ts)
+		{
+			float small_k = Ts/sum;
+			
+			T2 = small_k*T2;
+			T6 = small_k*T6;
+		}
+		
+		float T0 = (Ts - T2 - T6)/2;
+		
+		FOC.PWM.A = T6+T0;
+		FOC.PWM.B = T2+T6+T0;
+		FOC.PWM.C = T0;
+	}
+	else if(sector == 6)    //扇区3
+	{
+		float T2 = u1 * k;
+		float T3 = u2 * k;
+		
+		float sum = T2+T3;
+		if(sum > Ts)
+		{
+			float small_k = Ts/sum;
+			
+			T2 = small_k*T2;
+			T3 = small_k*T3;
+		}
+		
+		float T0 = (Ts - T2 - T3)/2;
+		
+		FOC.PWM.A = T0;
+		FOC.PWM.B = T2+T3+T0;
+		FOC.PWM.C = T3+T0;
+	}
+	else if(sector == 2)    //扇区4
+	{
+		float T1 = -u1 * k;
+		float T3 = -u3 * k;
+		
+		float sum = T1+T3;
+		if(sum > Ts)
+		{
+			float small_k = Ts/sum;
+			
+			T1 = small_k*T1;
+			T3 = small_k*T3;
+		}
+		
+		float T0 = (Ts - T1 - T3)/2;
+		
+		FOC.PWM.A = T0;
+		FOC.PWM.B = T3+T0;
+		FOC.PWM.C = T1+T3+T0;
+	}
+	else if(sector == 3)    //扇区5
+	{
+		float T1 = u2 * k;
+		float T5 = u3 * k;
+		
+		float sum = T1+T5;
+		if(sum > Ts)
+		{
+			float small_k = Ts/sum;
+			
+			T1 = small_k*T1;
+			T5 = small_k*T5;
+		}
+		
+		float T0 = (Ts - T1 - T5)/2;
+		
+		FOC.PWM.A = T5+T0;
+		FOC.PWM.B = T0;
+		FOC.PWM.C = T1+T5+T0;
+	}
+	else if(sector == 1)    //扇区6
+	{
+		float T4 = -u2 * k;
+		float T5 = -u1 * k;
+		
+		float sum = T4+T5;
+		if(sum > Ts)
+		{
+			float small_k = Ts/sum;
+			
+			T4 = small_k*T4;
+			T5 = small_k*T5;
+		}
+		
+		float T0 = (Ts - T4 - T5)/2;
+		
+		FOC.PWM.A = T4+T5+T0;
+		FOC.PWM.B = T0;
+		FOC.PWM.C = T5+T0;
+	}
     
 	SetPhashPwm(FOC.PWM.A, FOC.PWM.B, FOC.PWM.C);
     
     //采样电流选择
-    //FOC.I.SetSimplingPhash = SamplingPhashChoice();
+    FOC.I.SetSimplingPhash = SamplingPhashChoice();
 //    FOC.I.SetSimplingPhash = AB;
     SetSamplingPhash();
 }
