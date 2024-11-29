@@ -22,116 +22,15 @@ Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 C:\Users\Z\Desktop\FOC\MDK-ARM\FOC.uvprojx
-Project File Date:  11/25/2024
+Project File Date:  11/29/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'FOC'
-assembling startup_stm32f103xb.s...
-compiling stm32f1xx_hal_adc_ex.c...
-compiling i2c.c...
-compiling gpio.c...
-compiling stm32f1xx_hal_gpio_ex.c...
-compiling stm32f1xx_hal_gpio.c...
-compiling stm32f1xx_hal.c...
-compiling stm32f1xx_it.c...
-../PID/pid.h(27): warning:  #1-D: last line of file ends without a newline
-  #endif
-../MID/mid.h(17): warning:  #1295-D: Deprecated declaration SetSamplingPhash - give arg types
-  void SetSamplingPhash();
-../MID/mid.h(19): warning:  #1-D: last line of file ends without a newline
-  #endif
-../FOC_math/FOC_math.h(104): warning:  #1-D: last line of file ends without a newline
-  #endif
-../Core/Src/stm32f1xx_it.c: 4 warnings, 0 errors
-compiling dma.c...
-compiling stm32f1xx_hal_adc.c...
-compiling stm32f1xx_hal_dma.c...
-compiling main.c...
-../PID/pid.h(27): warning:  #1-D: last line of file ends without a newline
-  #endif
-../MID/mid.h(17): warning:  #1295-D: Deprecated declaration SetSamplingPhash - give arg types
-  void SetSamplingPhash();
-../MID/mid.h(19): warning:  #1-D: last line of file ends without a newline
-  #endif
-../FOC_math/FOC_math.h(104): warning:  #1-D: last line of file ends without a newline
-  #endif
-../Core/Src/main.c: 4 warnings, 0 errors
-compiling adc.c...
-compiling tim.c...
-compiling stm32f1xx_hal_rcc.c...
-compiling stm32f1xx_hal_msp.c...
-compiling stm32f1xx_hal_rcc_ex.c...
-compiling pid.c...
-..\PID\pid.h(27): warning:  #1-D: last line of file ends without a newline
-  #endif
-..\PID\pid.c(25): warning:  #1-D: last line of file ends without a newline
-  }
-..\PID\pid.c: 2 warnings, 0 errors
-compiling SMO_observer.c...
-..\FOC_math\SMO_observer.h(28): warning:  #1-D: last line of file ends without a newline
-  #endif
-..\FOC_math\SMO_observer.c(75): warning:  #223-D: function "fabsf" declared implicitly
-  	float abs_y = fabsf(y) + 1e-20f; // kludge to prevent 0/0 condition
-..\FOC_math\SMO_observer.c(93): warning:  #1-D: last line of file ends without a newline
-  }
-..\FOC_math\SMO_observer.c: 3 warnings, 0 errors
-compiling FOC_math.c...
-../PID/pid.h(27): warning:  #1-D: last line of file ends without a newline
-  #endif
-../MID/mid.h(17): warning:  #1295-D: Deprecated declaration SetSamplingPhash - give arg types
-  void SetSamplingPhash();
-../MID/mid.h(19): warning:  #1-D: last line of file ends without a newline
-  #endif
-..\FOC_math\FOC_math.h(104): warning:  #1-D: last line of file ends without a newline
-  #endif
-..\FOC_math\FOC_math.c(256): warning:  #188-D: enumerated type mixed with another type
-      FOC.I.SetSimplingPhash = SamplingPhashChoice();
-..\FOC_math\FOC_math.c(123): warning:  #177-D: variable "T0"  was declared but never referenced
-  	float T0,T1,T2,T3,T4,T5,T6;
-..\FOC_math\FOC_math.c(123): warning:  #177-D: variable "T1"  was declared but never referenced
-  	float T0,T1,T2,T3,T4,T5,T6;
-..\FOC_math\FOC_math.c(123): warning:  #177-D: variable "T2"  was declared but never referenced
-  	float T0,T1,T2,T3,T4,T5,T6;
-..\FOC_math\FOC_math.c(123): warning:  #177-D: variable "T3"  was declared but never referenced
-  	float T0,T1,T2,T3,T4,T5,T6;
-..\FOC_math\FOC_math.c(123): warning:  #177-D: variable "T4"  was declared but never referenced
-  	float T0,T1,T2,T3,T4,T5,T6;
-..\FOC_math\FOC_math.c(123): warning:  #177-D: variable "T5"  was declared but never referenced
-  	float T0,T1,T2,T3,T4,T5,T6;
-..\FOC_math\FOC_math.c(123): warning:  #177-D: variable "T6"  was declared but never referenced
-  	float T0,T1,T2,T3,T4,T5,T6;
-..\FOC_math\FOC_math.c(1220): warning:  #1-D: last line of file ends without a newline
-  }
-..\FOC_math\FOC_math.c: 13 warnings, 0 errors
-compiling mid.c...
-..\MID\mid.h(17): warning:  #1295-D: Deprecated declaration SetSamplingPhash - give arg types
-  void SetSamplingPhash();
-..\MID\mid.h(19): warning:  #1-D: last line of file ends without a newline
-  #endif
-../PID/pid.h(27): warning:  #1-D: last line of file ends without a newline
-  #endif
-../FOC_math/FOC_math.h(104): warning:  #1-D: last line of file ends without a newline
-  #endif
-..\MID\mid.c(49): warning:  #177-D: variable "sConfig"  was declared but never referenced
-      ADC_ChannelConfTypeDef sConfig = {0};
-..\MID\mid.c(196): warning:  #1-D: last line of file ends without a newline
-  }
-..\MID\mid.c: 6 warnings, 0 errors
-compiling stm32f1xx_hal_cortex.c...
-compiling stm32f1xx_hal_flash.c...
-compiling AS5600.c...
-compiling stm32f1xx_hal_flash_ex.c...
-compiling stm32f1xx_hal_exti.c...
-compiling stm32f1xx_hal_tim_ex.c...
-compiling system_stm32f1xx.c...
-compiling stm32f1xx_hal_pwr.c...
-compiling stm32f1xx_hal_tim.c...
-compiling stm32f1xx_hal_i2c.c...
 linking...
-Program Size: Code=25802 RO-data=3914 RW-data=156 ZI-data=3052  
+Program Size: Code=26974 RO-data=3914 RW-data=220 ZI-data=3052  
 FromELF: creating hex file...
-"FOC\FOC.axf" - 0 Error(s), 32 Warning(s).
+"FOC\FOC.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -155,7 +54,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:09
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

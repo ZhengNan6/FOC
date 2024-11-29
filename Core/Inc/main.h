@@ -75,6 +75,10 @@ void Error_Handler(void);
 #define B_H_GPIO_Port GPIOA
 #define A_H_Pin GPIO_PIN_10
 #define A_H_GPIO_Port GPIOA
+#define GND5600_Pin GPIO_PIN_3
+#define GND5600_GPIO_Port GPIOB
+#define VCC5600_Pin GPIO_PIN_5
+#define VCC5600_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

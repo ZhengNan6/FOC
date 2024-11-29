@@ -34,3 +34,4 @@ foc\as5600.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 foc\as5600.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 foc\as5600.o: ../Core/Inc/i2c.h
 foc\as5600.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+foc\as5600.o: ../Core/Inc/stm32f1xx_it.h

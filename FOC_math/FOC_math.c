@@ -2,14 +2,20 @@
 #include "string.h"
 #include "mid.h"
 #include "math.h"
+#include "AS5600.h"
+
 FOC_t FOC;
 pid_init_t pid_init = {
-    .P = 1,
+    .P = 0.5,
     .I = 0,
     .D = 0,
     .IerrorLimit= 0,
     .OutLimit= 0
 };
+
+extern uint8_t receive_Start;
+extern int64_t Encoder_total;
+void FocInitZero(float SetCurrent);
 
 /**
  * @brief 采样相选择
@@ -81,16 +87,40 @@ void AlphaBeta_to_Phase(void)
 /**
  * @brief FOC控制初始化
  */
+float zero_current = 0.5f;
+uint8_t zero_angle = 0;
 void FOC_Init(void)
 {
+    AS5600_Read_DMA();
     memset(&FOC, 0, sizeof(FOC_t));
     PidInit(&FOC.Ud_PI, &pid_init);
     PidInit(&FOC.Uq_PI, &pid_init);
 	StartPhashPwm();
 	SetPhashPwm(FOC.PWM.A, FOC.PWM.B, FOC.PWM.C);
+    
+    while (receive_Start == 0);
+    //校准电0角度
+//    for (uint16_t i = 0; i < 100;)
+//    {
+//        FocInitZero(1);
+//        static int64_t Last_Encoder_total = 0;
+//        if (abs(Last_Encoder_total - Encoder_total < 10))   i++;
+//        Last_Encoder_total = Encoder_total;
+//        HAL_Delay(1);
+//    }
+    while (zero_angle == 0)
+    {
+        FocInitZero(zero_current);
+        HAL_Delay(1);
+    }
+    Set_Zero();
+    Encoder_total = 0;
 }
 
 
+float float_mod(float a, float b) {
+    return a - b * floor(a / b);
+}
 
 
 /**
@@ -98,8 +128,18 @@ void FOC_Init(void)
  * @param SetCurrent 设定力矩电流
  * @note  最大输出电压限制为0.866Udc
  */
+float spe;
+uint64_t foc_calc_time = 0;
 void FOCSetCurrent(float SetCurrent)
 {
+//    foc_calc_time++;
+//    spe = GetSpeed();
+    float CurrentAngle = Get_OffSet_Angle() * 7;
+    while (CurrentAngle > 180.0f)   CurrentAngle -= 360.0f;
+    while (CurrentAngle < -180.0f)   CurrentAngle += 360.0f;
+//    FOC.angle = min_distance();
+    FOC.angle = CurrentAngle;
+    
     //qd轴电流计算
     GetSamplingCurrent();
     Phase_to_AlphaBeta();
@@ -109,6 +149,9 @@ void FOCSetCurrent(float SetCurrent)
     FOC.U.d = PidCalc(&FOC.Ud_PI, 0,            FOC.I.d);
     FOC.U.q = PidCalc(&FOC.Uq_PI, SetCurrent,   FOC.I.q);
     //电压限幅，最大等幅圆为 1/sqrt(3)Udc
+    
+    FOC.U.d = 0;
+    FOC.U.q = SetCurrent;
     /*
     svpwm的调制已经针对过调制的情况进行限幅，视为此处限幅的超集
     */
@@ -253,9 +296,156 @@ void FOCSetCurrent(float SetCurrent)
 	SetPhashPwm(FOC.PWM.A, FOC.PWM.B, FOC.PWM.C);
     
     //采样电流选择
-    FOC.I.SetSimplingPhash = SamplingPhashChoice();
-//    FOC.I.SetSimplingPhash = AB;
+//    FOC.I.SetSimplingPhash = SamplingPhashChoice();
+    FOC.I.SetSimplingPhash = AB;
     SetSamplingPhash();
+}
+
+void FocInitZero(float SetCurrent)
+{
+    //PI调节器，输出转子电压量
+    FOC.U.d = SetCurrent;
+    FOC.U.q = 0;
+    FOC.angle = 0;
+    qd_to_AlphaBeta();
+    //https://blog.csdn.net/qq_28149763/article/details/131362497
+    //扇区判断的两种方法：角度/60°+1；根据三相线编码，这里采用后者避免前者的除法运算大量开销
+    //1.u1 u2 u3
+    
+	float u1 =  FOC.U.Beta;
+	float u2 = -FOC.U.Alpha*SQET_3_2 - FOC.U.Beta*0.5f;
+	float u3 =  FOC.U.Alpha*SQET_3_2 - FOC.U.Beta*0.5f;
+	float T0,T1,T2,T3,T4,T5,T6;
+    float Ts = 1800;//pwm计数周期
+    float k = Two_DIV_SQRT_3 * Ts / Udc;  //Ts=1,Uds=1
+
+	//2.获取扇区号
+	uint8_t sector = (u3 >0 ) + ((u2 > 0) << 1) + ((u1 > 0) << 2);
+
+	//3.总结矢量作用时间表
+	if(sector == 5)    //扇区1
+	{
+		float T4 = u3 * k;
+		float T6 = u1 * k;
+		
+		float sum = T4+T6;
+		if(sum > Ts)
+		{
+           //缩放系数
+			float small_k = Ts/sum;
+			
+			T4 = small_k*T4;
+			T6 = small_k*T6;
+		}
+		
+		float T0 = (Ts - T4 - T6)/2;
+		
+		FOC.PWM.A = T4+T6+T0;
+		FOC.PWM.B = T6+T0;
+		FOC.PWM.C = T0;
+	}
+	else if(sector == 4)    //扇区2
+	{
+		float T2 = -u3 * k;
+		float T6 = -u2 * k;
+		
+		float sum = T2+T6;
+		if(sum > Ts)
+		{
+			float small_k = Ts/sum;
+			
+			T2 = small_k*T2;
+			T6 = small_k*T6;
+		}
+		
+		float T0 = (Ts - T2 - T6)/2;
+		
+		FOC.PWM.A = T6+T0;
+		FOC.PWM.B = T2+T6+T0;
+		FOC.PWM.C = T0;
+	}
+	else if(sector == 6)    //扇区3
+	{
+		float T2 = u1 * k;
+		float T3 = u2 * k;
+		
+		float sum = T2+T3;
+		if(sum > Ts)
+		{
+			float small_k = Ts/sum;
+			
+			T2 = small_k*T2;
+			T3 = small_k*T3;
+		}
+		
+		float T0 = (Ts - T2 - T3)/2;
+		
+		FOC.PWM.A = T0;
+		FOC.PWM.B = T2+T3+T0;
+		FOC.PWM.C = T3+T0;
+	}
+	else if(sector == 2)    //扇区4
+	{
+		float T1 = -u1 * k;
+		float T3 = -u3 * k;
+		
+		float sum = T1+T3;
+		if(sum > Ts)
+		{
+			float small_k = Ts/sum;
+			
+			T1 = small_k*T1;
+			T3 = small_k*T3;
+		}
+		
+		float T0 = (Ts - T1 - T3)/2;
+		
+		FOC.PWM.A = T0;
+		FOC.PWM.B = T3+T0;
+		FOC.PWM.C = T1+T3+T0;
+	}
+	else if(sector == 3)    //扇区5
+	{
+		float T1 = u2 * k;
+		float T5 = u3 * k;
+		
+		float sum = T1+T5;
+		if(sum > Ts)
+		{
+			float small_k = Ts/sum;
+			
+			T1 = small_k*T1;
+			T5 = small_k*T5;
+		}
+		
+		float T0 = (Ts - T1 - T5)/2;
+		
+		FOC.PWM.A = T5+T0;
+		FOC.PWM.B = T0;
+		FOC.PWM.C = T1+T5+T0;
+	}
+	else if(sector == 1)    //扇区6
+	{
+		float T4 = -u2 * k;
+		float T5 = -u1 * k;
+		
+		float sum = T4+T5;
+		if(sum > Ts)
+		{
+			float small_k = Ts/sum;
+			
+			T4 = small_k*T4;
+			T5 = small_k*T5;
+		}
+		
+		float T0 = (Ts - T4 - T5)/2;
+		
+		FOC.PWM.A = T4+T5+T0;
+		FOC.PWM.B = T0;
+		FOC.PWM.C = T5+T0;
+	}
+    
+	SetPhashPwm(FOC.PWM.A, FOC.PWM.B, FOC.PWM.C);
 }
 
 FOC_t* GetFOC(void)
